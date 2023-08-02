@@ -1,0 +1,21 @@
+.profile__about {
+  margin: 5px 0 0;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+/* Чтобы сохранить высоту при пустом контенте, чтобы не дергалось при начальной загрузке */
+.profile__about:empty::before {
+  content: "";
+  display: inline-block;
+}
+
+@media screen and (max-width: 767px) {
+  .profile__about {
+    margin-top: 7px;
+    font-size: 14px;
+    line-height: 17px;
+    text-align: center;
+  }
+}
