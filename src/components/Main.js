@@ -1,9 +1,12 @@
+import avatar_placeholder from '../images/avatar_placeholder.png'
+
+
 function Main() {
   return (
     <main className="content">
       <section className="profile page__profile">
         <span className="profile__picture-container">
-          <img src="<%=require('./images/avatar_placeholder.png')%>" alt="Аватар" className="profile__picture" />
+          <img src={avatar_placeholder} alt="Аватар" className="profile__picture" />
         </span>
         <div className="profile__info">
           <div className="profile__name-container">
