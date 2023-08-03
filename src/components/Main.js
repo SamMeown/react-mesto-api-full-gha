@@ -1,22 +1,58 @@
 import { useEffect, useState } from 'react';
-import avatar_placeholder from '../images/avatar_placeholder.png'
+import avatar_placeholder from '../images/avatar_placeholder.png';
+import places_placeholder from '../images/places_placeholder.png';
 import api from "../utils/api";
 
 
 function Main({onEditProfile, onEditAvatar, onAddPlace}) {
-  const [userName, setUserName] = useState(null);
+  const [userId, setUserId] = useState("");
+  const [userName, setUserName] = useState("");
   const [userDescription, setUserDescription] = useState(null);
   const [userAvatar, setUserAvatar] = useState(null);
+
+  const [cards, setCards] = useState([])
+
+  function setUserInfo(user) {
+    setUserId(user._id)
+    setUserName(user.name);
+    setUserDescription(user.about);
+    setUserAvatar(user.avatar);
+  }
+
+  function setCardsInfo(data) {
+    setCards(
+      data.map(item => ({
+        id: item._id,
+        name: item.name,
+        link: item.link,
+        likesCount: item.likes.length,
+        liked: item.likes.filter(like => like._id === userId).length > 0,
+        removable: item.owner._id === userId
+      }))
+    );
+  }
 
   useEffect(() => {
     api.getUserInfo()
       .then(data => {
-        const user = data;
-        setUserName(user.name);
-        setUserDescription(user.about);
-        setUserAvatar(user.avatar);
+        console.log(`Got user data: `, data);
+        setUserInfo(data);
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
       });
-  });
+  }, []);
+
+  useEffect(() => {
+    api.getCards()
+      .then(data => {
+        console.log(`Got cards data: `, data);
+        setCardsInfo(data);
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }, [userId]);
 
   return (
     <main className="content">
@@ -35,6 +71,19 @@ function Main({onEditProfile, onEditAvatar, onAddPlace}) {
       </section>
       <section className="places page__places">
         <ul className="places__list">
+          {cards.map(card => (
+            <li className="places__item" key={card.id}>
+              <img src={card.link ?? places_placeholder} alt={card.name} className="places__image" />
+              <div className="places__footer">
+                <h2 className="places__name overflow-ready-string">{card.name}</h2>
+                <div className="places__like-container">
+                  <button className={`btn places__like-btn ${card.liked ? 'places__like-btn_clicked' : ''}`} type="button" aria-label="Лайк"></button>
+                  <p className="places__like-counter">{card.likesCount}</p>
+                </div>
+              </div>
+              <button className="btn places__delete-btn" type="button" style={card.removable ? {} : {display: 'none'}}aria-label="Удалить"></button>
+            </li>
+          ))}
         </ul>
       </section>
     </main>
