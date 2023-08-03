@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import avatar_placeholder from '../images/avatar_placeholder.png';
-import places_placeholder from '../images/places_placeholder.png';
 import api from "../utils/api";
+import Card from './Card';
 
 
 function Main({onEditProfile, onEditAvatar, onAddPlace}) {
-  const [userId, setUserId] = useState("");
-  const [userName, setUserName] = useState("");
+  const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState(null);
   const [userDescription, setUserDescription] = useState(null);
   const [userAvatar, setUserAvatar] = useState(null);
 
@@ -71,18 +71,8 @@ function Main({onEditProfile, onEditAvatar, onAddPlace}) {
       </section>
       <section className="places page__places">
         <ul className="places__list">
-          {cards.map(card => (
-            <li className="places__item" key={card.id}>
-              <img src={card.link ?? places_placeholder} alt={card.name} className="places__image" />
-              <div className="places__footer">
-                <h2 className="places__name overflow-ready-string">{card.name}</h2>
-                <div className="places__like-container">
-                  <button className={`btn places__like-btn ${card.liked ? 'places__like-btn_clicked' : ''}`} type="button" aria-label="Лайк"></button>
-                  <p className="places__like-counter">{card.likesCount}</p>
-                </div>
-              </div>
-              <button className="btn places__delete-btn" type="button" style={card.removable ? {} : {display: 'none'}}aria-label="Удалить"></button>
-            </li>
+          {cards.map(item => (
+            <Card card={item} key={item.id} />
           ))}
         </ul>
       </section>
