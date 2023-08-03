@@ -1,8 +1,11 @@
-function PopupWithForm({name, title, btnTitle, children}) {
+function PopupWithForm({name, title, btnTitle, onClose, children, isOpen}) {
   return (
-    <div className={`popup page__${name}-popup`}>
+    <div 
+      className={`popup page__${name}-popup ${isOpen ? 'popup_opened' : ''}`.trim()} 
+      onClick={evt => evt.target === evt.currentTarget && onClose()}
+    >
       <div className="popup__container">
-        <button className="popup__close-btn btn" type="button" aria-label="Закрыть"></button>
+        <button className="popup__close-btn btn" type="button" onClick={onClose} aria-label="Закрыть"></button>
         <form className="form popup__form" name={`${name}-form`} novalidate>
           <h2 className="form__title">{title}</h2>
           <fieldset className="form__fieldset form__fieldset_set_inputs">
