@@ -12,6 +12,8 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
 
+  const [selectedCard, setSelectedCard] = useState(null)
+
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
   }
@@ -24,10 +26,16 @@ function App() {
     setIsAddPlacePopupOpen(true);
   }
 
+  function handleCardClick(card) {
+    setSelectedCard(card);
+  }
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setIsAddPlacePopupOpen(false);
+
+    setSelectedCard(null);
   }
 
 
@@ -35,7 +43,12 @@ function App() {
     <div className="page">
       <div className="page__content">
         <Header />
-        <Main onEditProfile={handleEditProfileClick} onEditAvatar={handleEditAvatarClick} onAddPlace={handleAddPlaceClick} />
+        <Main 
+          onEditProfile={handleEditProfileClick} 
+          onEditAvatar={handleEditAvatarClick} 
+          onAddPlace={handleAddPlaceClick} 
+          onCardClick={handleCardClick} 
+        />
         <Footer />
       </div>
       <PopupWithForm name="profile" title="Редактировать профиль" btnTitle="Сохранить" onClose={closeAllPopups} isOpen={isEditProfilePopupOpen}>
@@ -64,7 +77,7 @@ function App() {
           <span className="form__input-error form__input-error_el_place-link-input"></span>
         </label>
       </PopupWithForm>
-      <PopupWithImage />
+      <PopupWithImage card={selectedCard} onClose={closeAllPopups}/>
       <PopupWithForm name="delete" title="Вы уверены?" btnTitle="Да" />
     </div>
   );

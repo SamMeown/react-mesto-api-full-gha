@@ -4,7 +4,7 @@ import api from "../utils/api";
 import Card from './Card';
 
 
-function Main({onEditProfile, onEditAvatar, onAddPlace}) {
+function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
   const [userId, setUserId] = useState(null);
   const [userName, setUserName] = useState(null);
   const [userDescription, setUserDescription] = useState(null);
@@ -72,7 +72,7 @@ function Main({onEditProfile, onEditAvatar, onAddPlace}) {
       <section className="places page__places">
         <ul className="places__list">
           {cards.map(item => (
-            <Card card={item} key={item.id} />
+            <Card card={item} onCardClick={onCardClick} key={item.id} />
           ))}
         </ul>
       </section>

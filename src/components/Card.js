@@ -1,9 +1,14 @@
 import places_placeholder from '../images/places_placeholder.png';
 
-function Card({card}) {
+function Card({card, onCardClick}) {
+
+  function handleClick() {
+    onCardClick(card);
+  }
+
   return (
     <li className="places__item">
-      <img src={card.link ?? places_placeholder} alt={card.name} className="places__image" />
+      <img src={card.link ?? places_placeholder} alt={card.name} className="places__image" onClick={handleClick}/>
       <div className="places__footer">
         <h2 className="places__name overflow-ready-string">{card.name}</h2>
         <div className="places__like-container">
