@@ -1,6 +1,6 @@
 import img_placeholder from '../images/places_placeholder.png'
 
-function PopupWithImage({card, onClose}) {
+function ImagePopup({card, onClose}) {
   return (
     <div 
       className={`popup popup_type_image page__place-image-popup ${card ? 'popup_opened' : ''}`}
@@ -15,4 +15,4 @@ function PopupWithImage({card, onClose}) {
   );
 }
 
-export default PopupWithImage;
+export default ImagePopup;
