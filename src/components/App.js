@@ -1,18 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
+import api from "../utils/api";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 
 function App() {
+
+  const [currentUser, setCurrentUser] = useState(null);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
 
-  const [selectedCard, setSelectedCard] = useState(null)
+  const [selectedCard, setSelectedCard] = useState(null);
+
+  useEffect(() => {
+    api.getUserInfo()
+      .then(data => {
+        console.log(`Got user data: `, data);
+        setCurrentUser(data); 
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -41,16 +56,18 @@ function App() {
 
   return (
     <div className="page">
-      <div className="page__content">
-        <Header />
-        <Main 
-          onEditProfile={handleEditProfileClick} 
-          onEditAvatar={handleEditAvatarClick} 
-          onAddPlace={handleAddPlaceClick} 
-          onCardClick={handleCardClick} 
-        />
-        <Footer />
-      </div>
+      <CurrentUserContext.Provider value={currentUser}>
+        <div className="page__content">
+          <Header />
+          <Main 
+            onEditProfile={handleEditProfileClick} 
+            onEditAvatar={handleEditAvatarClick} 
+            onAddPlace={handleAddPlaceClick} 
+            onCardClick={handleCardClick} 
+          />
+          <Footer />
+        </div>
+      </CurrentUserContext.Provider>
       <PopupWithForm name="profile" title="Редактировать профиль" btnTitle="Сохранить" onClose={closeAllPopups} isOpen={isEditProfilePopupOpen}>
         <label className="form__field">
           <input className="form__input" id="name-input" type="text" name="name" placeholder="Имя" value="" minLength="2" maxLength="40" required />

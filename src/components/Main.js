@@ -1,23 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import avatar_placeholder from '../images/avatar_placeholder.png';
 import api from "../utils/api";
 import Card from './Card';
 
 
 function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
-  const [userId, setUserId] = useState(null);
-  const [userName, setUserName] = useState(null);
-  const [userDescription, setUserDescription] = useState(null);
-  const [userAvatar, setUserAvatar] = useState(null);
 
-  const [cards, setCards] = useState([])
+  const currentUser = useContext(CurrentUserContext);
 
-  function setUserInfo(user) {
-    setUserId(user._id)
-    setUserName(user.name);
-    setUserDescription(user.about);
-    setUserAvatar(user.avatar);
-  }
+  const [cards, setCards] = useState([]);
 
   function setCardsInfo(data) {
     setCards(
@@ -26,22 +18,11 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
         name: item.name,
         link: item.link,
         likesCount: item.likes.length,
-        liked: item.likes.filter(like => like._id === userId).length > 0,
-        removable: item.owner._id === userId
+        liked: currentUser && item.likes.filter(like => like._id === currentUser._id).length > 0,
+        removable: currentUser && item.owner._id === currentUser._id
       }))
     );
   }
-
-  useEffect(() => {
-    api.getUserInfo()
-      .then(data => {
-        console.log(`Got user data: `, data);
-        setUserInfo(data);
-      })
-      .catch(err => {
-        console.log(`Ошибка ${err}`);
-      });
-  }, []);
 
   useEffect(() => {
     api.getCards()
@@ -52,20 +33,20 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-  }, [userId]);
+  }, [currentUser]);
 
   return (
     <main className="content">
       <section className="profile page__profile">
         <span className="profile__picture-container" onClick={onEditAvatar}>
-          <img src={userAvatar ?? avatar_placeholder} alt="Аватар" className="profile__picture" />
+          <img src={(currentUser && currentUser.avatar) ?? avatar_placeholder} alt="Аватар" className="profile__picture" />
         </span>
         <div className="profile__info">
           <div className="profile__name-container">
-            <h1 className="profile__name overflow-ready-string">{userName ?? ""}</h1>
+            <h1 className="profile__name overflow-ready-string">{currentUser ? currentUser.name : ""}</h1>
             <button className="btn profile__edit-btn" type="button" onClick={onEditProfile} aria-label="Редактировать профиль"></button>
           </div>
-          <p className="profile__about overflow-ready-string">{userDescription ?? ""}</p>
+          <p className="profile__about overflow-ready-string">{currentUser ? currentUser.about : ""}</p>
         </div>
         <button className="btn profile__add-btn" type="button" onClick={onAddPlace} aria-label="Добавить место"></button>
       </section>
