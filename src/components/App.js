@@ -6,6 +6,7 @@ import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
+import EditProfilePopup from "./EditProfilePopup";
 
 
 function App() {
@@ -68,16 +69,7 @@ function App() {
           <Footer />
         </div>
       </CurrentUserContext.Provider>
-      <PopupWithForm name="profile" title="Редактировать профиль" btnTitle="Сохранить" onClose={closeAllPopups} isOpen={isEditProfilePopupOpen}>
-        <label className="form__field">
-          <input className="form__input" id="name-input" type="text" name="name" placeholder="Имя" value="" minLength="2" maxLength="40" required />
-          <span className="form__input-error form__input-error_el_name-input"></span>
-        </label>
-        <label className="form__field">
-          <input className="form__input" id="about-input" type="text" name="about" placeholder="О себе" value="" minLength="2" maxLength="200" required />
-          <span className="form__input-error form__input-error_el_about-input"></span>
-        </label>
-      </PopupWithForm>
+      <EditProfilePopup onClose={closeAllPopups} isOpen={isEditProfilePopupOpen} />
       <PopupWithForm name="avatar" title="Обновить аватар" btnTitle="Сохранить" onClose={closeAllPopups} isOpen={isEditAvatarPopupOpen}>
         <label className="form__field">
           <input className="form__input" id="avatar-link-input" type="url" name="link" placeholder="Ссылка на аватар" value="" required />
