@@ -66,6 +66,17 @@ function App() {
     closeAllPopups();
   }
 
+  function handleUpdateAvatar(avatarInfo) {
+    api.updateUserAvatar(avatarInfo)
+      .then(data => {
+        setCurrentUser(data);
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+    closeAllPopups();
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
@@ -80,7 +91,7 @@ function App() {
           <Footer />
         </div>
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
-        <EditAvatarPopup onClose={closeAllPopups} isOpen={isEditAvatarPopupOpen} />
+        <EditAvatarPopup onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
         <PopupWithForm name="place" title="Новое место" btnTitle="Создать" onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}>
           <label className="form__field">
             <input className="form__input" id="place-name-input" type="text" name="name" placeholder="Название" value="" minLength="2" maxLength="30" required />
