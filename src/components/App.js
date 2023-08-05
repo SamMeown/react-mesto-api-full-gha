@@ -104,6 +104,18 @@ function App() {
     closeAllPopups();
   }
 
+  function handleAddPlaceSubmit(placeInfo) {
+    api.createCard(placeInfo)
+      .then(data => {
+        const newCard = getCardData(data);
+        setCards([newCard, ...cards]);
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      })
+    closeAllPopups();
+  }
+
   function handleCardLike(card) {
     const isLiked = card.likes.some(like => like._id === currentUser._id);
 
@@ -148,7 +160,7 @@ function App() {
         </div>
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
         <EditAvatarPopup onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
-        <AddPlacePopup onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} />
+        <AddPlacePopup onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} />
         <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
         <PopupWithForm name="delete" title="Вы уверены?" btnTitle="Да" />
       </CurrentUserContext.Provider>
