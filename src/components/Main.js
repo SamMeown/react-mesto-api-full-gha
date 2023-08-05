@@ -12,15 +12,17 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
   const [cards, setCards] = useState([]);
 
   function setCardsInfo(data) {
-    setCards(
-      data.map(item => ({
-        id: item._id,
-        name: item.name,
-        link: item.link,
-        likes: item.likes,
-        owner: item.owner
-      }))
-    );
+    setCards(data.map(getCardData));
+  }
+
+  function getCardData(item) {
+    return {
+      id: item._id,
+      name: item.name,
+      link: item.link,
+      likes: item.likes,
+      owner: item.owner
+    };
   }
 
   useEffect(() => {
@@ -33,6 +35,20 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
         console.log(`Ошибка ${err}`);
       });
   }, [currentUser]);
+
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(like => like._id === currentUser._id);
+
+    api.changeLikeStatus(card.id, !isLiked)
+      .then(newCard => {
+        setCards(state => {
+          return state.map(c => c.id === card.id ? getCardData(newCard) : c);
+        });
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }
 
   return (
     <main className="content">
@@ -52,7 +68,7 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
       <section className="places page__places">
         <ul className="places__list">
           {cards.map(item => (
-            <Card card={item} onCardClick={onCardClick} key={item.id} />
+            <Card card={item} onCardClick={onCardClick} onCardLike={handleCardLike} key={item.id} />
           ))}
         </ul>
       </section>

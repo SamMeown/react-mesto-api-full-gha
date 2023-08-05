@@ -47,6 +47,10 @@ class Api {
     }).then(Api._handleResponse);
   }
 
+  changeLikeStatus(cardId, like) {
+    return like ? this.addLike(cardId) : this.deleteLike(cardId);
+  }
+
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
       headers: this._headers

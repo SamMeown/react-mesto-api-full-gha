@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import places_placeholder from '../images/places_placeholder.png';
 
-function Card({card, onCardClick}) {
+function Card({card, onCardClick, onCardLike}) {
 
   const currentUser = useContext(CurrentUserContext);
 
@@ -11,6 +11,10 @@ function Card({card, onCardClick}) {
 
   function handleClick() {
     onCardClick(card);
+  }
+
+  function handleLikeClick() {
+    onCardLike(card);
   }
 
   return (
@@ -22,6 +26,7 @@ function Card({card, onCardClick}) {
           <button 
             className={`btn places__like-btn ${isLiked ? 'places__like-btn_clicked' : ''}`} 
             type="button" 
+            onClick={handleLikeClick}
             aria-label="Лайк"
           ></button>
           <p className="places__like-counter">{card.likes.length}</p>
