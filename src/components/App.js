@@ -7,6 +7,7 @@ import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
+import EditAvatarPopup from "./EditAvatarPopup";
 
 
 function App() {
@@ -79,12 +80,7 @@ function App() {
           <Footer />
         </div>
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
-        <PopupWithForm name="avatar" title="Обновить аватар" btnTitle="Сохранить" onClose={closeAllPopups} isOpen={isEditAvatarPopupOpen}>
-          <label className="form__field">
-            <input className="form__input" id="avatar-link-input" type="url" name="link" placeholder="Ссылка на аватар" value="" required />
-            <span className="form__input-error form__input-error_el_avatar-link-input"></span>
-          </label>
-        </PopupWithForm>
+        <EditAvatarPopup onClose={closeAllPopups} isOpen={isEditAvatarPopupOpen} />
         <PopupWithForm name="place" title="Новое место" btnTitle="Создать" onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}>
           <label className="form__field">
             <input className="form__input" id="place-name-input" type="text" name="name" placeholder="Название" value="" minLength="2" maxLength="30" required />
