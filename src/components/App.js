@@ -13,6 +13,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(null);
+  const [cards, setCards] = useState([]);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -30,6 +31,31 @@ function App() {
         console.log(`Ошибка ${err}`);
       });
   }, []);
+
+  useEffect(() => {
+    api.getCards()
+      .then(data => {
+        console.log(`Got cards data: `, data);
+        setCardsInfo(data);
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }, [currentUser]);
+
+  function setCardsInfo(data) {
+    setCards(data.map(getCardData));
+  }
+
+  function getCardData(item) {
+    return {
+      id: item._id,
+      name: item.name,
+      link: item.link,
+      likes: item.likes,
+      owner: item.owner
+    };
+  }
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -77,16 +103,45 @@ function App() {
     closeAllPopups();
   }
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(like => like._id === currentUser._id);
+
+    api.changeLikeStatus(card.id, !isLiked)
+      .then(newCard => {
+        setCards(state => {
+          return state.map(c => c.id === card.id ? getCardData(newCard) : c);
+        });
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }
+
+  function handleCardDelete(card) {
+    api.deleteCard(card.id)
+      .then(data => {
+        setCards(state => {
+          return state.filter(c => c.id !== card.id);
+        });
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }
+
   return (
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page__content">
           <Header />
           <Main 
+            cards={cards}
             onEditProfile={handleEditProfileClick} 
             onEditAvatar={handleEditAvatarClick} 
             onAddPlace={handleAddPlaceClick} 
             onCardClick={handleCardClick} 
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
           />
           <Footer />
         </div>
