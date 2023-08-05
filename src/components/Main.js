@@ -17,9 +17,8 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
         id: item._id,
         name: item.name,
         link: item.link,
-        likesCount: item.likes.length,
-        liked: currentUser && item.likes.filter(like => like._id === currentUser._id).length > 0,
-        removable: currentUser && item.owner._id === currentUser._id
+        likes: item.likes,
+        owner: item.owner
       }))
     );
   }
