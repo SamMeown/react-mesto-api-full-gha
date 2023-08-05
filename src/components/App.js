@@ -8,6 +8,7 @@ import api from "../utils/api";
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
+import AddPlacePopup from "./AddPlacePopup";
 
 
 function App() {
@@ -147,16 +148,7 @@ function App() {
         </div>
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
         <EditAvatarPopup onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
-        <PopupWithForm name="place" title="Новое место" btnTitle="Создать" onClose={closeAllPopups} isOpen={isAddPlacePopupOpen}>
-          <label className="form__field">
-            <input className="form__input" id="place-name-input" type="text" name="name" placeholder="Название" value="" minLength="2" maxLength="30" required />
-            <span className="form__input-error form__input-error_el_place-name-input"></span>
-          </label>
-          <label className="form__field">
-            <input className="form__input" id="place-link-input" type="url" name="link" placeholder="Ссылка на картинку" value="" required />
-            <span className="form__input-error form__input-error_el_place-link-input"></span>
-          </label>
-        </PopupWithForm>
+        <AddPlacePopup onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} />
         <ImagePopup card={selectedCard} onClose={closeAllPopups}/>
         <PopupWithForm name="delete" title="Вы уверены?" btnTitle="Да" />
       </CurrentUserContext.Provider>
