@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import places_placeholder from '../images/places_placeholder.png';
 
-function Card({card, onCardClick, onCardLike}) {
+function Card({card, onCardClick, onCardLike, onCardDelete}) {
 
   const currentUser = useContext(CurrentUserContext);
 
@@ -15,6 +15,10 @@ function Card({card, onCardClick, onCardLike}) {
 
   function handleLikeClick() {
     onCardLike(card);
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(card);
   }
 
   return (
@@ -36,6 +40,7 @@ function Card({card, onCardClick, onCardLike}) {
         className="btn places__delete-btn" 
         type="button" 
         style={isOwn ? {} : {display: 'none'}} 
+        onClick={handleDeleteClick}
         aria-label="Удалить"
       ></button>
     </li>

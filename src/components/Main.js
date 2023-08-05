@@ -50,6 +50,18 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
       });
   }
 
+  function handleCardDelete(card) {
+    api.deleteCard(card.id)
+      .then(data => {
+        setCards(state => {
+          return state.filter(c => c.id !== card.id);
+        });
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+  }
+
   return (
     <main className="content">
       <section className="profile page__profile">
@@ -68,7 +80,13 @@ function Main({onEditProfile, onEditAvatar, onAddPlace, onCardClick}) {
       <section className="places page__places">
         <ul className="places__list">
           {cards.map(item => (
-            <Card card={item} onCardClick={onCardClick} onCardLike={handleCardLike} key={item.id} />
+            <Card 
+              card={item} 
+              onCardClick={onCardClick} 
+              onCardLike={handleCardLike} 
+              onCardDelete={handleCardDelete} 
+              key={item.id} 
+            />
           ))}
         </ul>
       </section>
