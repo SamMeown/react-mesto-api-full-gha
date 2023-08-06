@@ -86,22 +86,22 @@ function App() {
     api.updateUserInfo(userInfo)
       .then(data => {
         setCurrentUser(data);
+        closeAllPopups();
       })
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-    closeAllPopups();
   }
 
   function handleUpdateAvatar(avatarInfo) {
     api.updateUserAvatar(avatarInfo)
       .then(data => {
         setCurrentUser(data);
+        closeAllPopups();
       })
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-    closeAllPopups();
   }
 
   function handleAddPlaceSubmit(placeInfo) {
@@ -109,11 +109,11 @@ function App() {
       .then(data => {
         const newCard = getCardData(data);
         setCards([newCard, ...cards]);
+        closeAllPopups();
       })
       .catch(err => {
         console.log(`Ошибка ${err}`);
       })
-    closeAllPopups();
   }
 
   function handleCardLike(card) {
