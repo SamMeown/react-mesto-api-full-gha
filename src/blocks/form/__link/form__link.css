@@ -1,0 +1,17 @@
+.form__link {
+  display: block;
+  /* visibility: hidden; */
+  margin-top: 15px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  font-family: inherit;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  transition: opacity 0.3s ease;
+}
+
+.form__link:hover {
+  opacity: 0.8;
+}

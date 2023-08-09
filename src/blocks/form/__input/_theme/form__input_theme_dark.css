@@ -1,0 +1,13 @@
+.form__input_theme_dark {
+  color: #fff;
+  border-color: #ccc;
+  caret-color: #ccc;
+}
+
+.form__input_theme_dark:focus {
+  border-color: #ddd;
+}
+
+.form__input_theme_dark::placeholder {
+  color: #ccc;
+}
