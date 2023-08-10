@@ -20,6 +20,8 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [cards, setCards] = useState([]);
 
+  const [loggedIn, setLoggedIn] = useState(false);
+
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
@@ -150,7 +152,7 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page__content">
-          <Header />
+          <Header loggedIn={loggedIn} />
           <Routes>
             <Route path="/" element={
               <>
