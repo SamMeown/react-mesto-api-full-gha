@@ -14,6 +14,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
+import auth from "../utils/auth";
 
 
 function App() {
@@ -55,6 +56,26 @@ function App() {
         console.log(`Ошибка ${err}`);
       });
   }, [currentUser]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      auth.getUserInfo(token)
+      .then(info => {
+        console.log(`Got user data (auth): `, info);
+        if (!info.data || !info.data.email) {
+          return;
+        }
+
+        setLoggedIn(true);
+        setCurrentUserEmail(info.data.email);
+        navigate('/');
+      })
+      .catch(err => {
+        console.log(`Ошибка ${err}`);
+      });
+    }
+  }, []);
 
   function setCardsInfo(data) {
     setCards(data.map(getCardData));

@@ -36,6 +36,17 @@ class Auth {
       }
     });
   }
+
+  getUserInfo(token) {
+    return fetch(`${this._url}/users/me`, {
+      method: 'GET',
+      headers: {
+        ...this._headers, 
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(Auth._handleResponse);
+  }
 }
 
 const auth = new Auth('https://auth.nomoreparties.co', {
