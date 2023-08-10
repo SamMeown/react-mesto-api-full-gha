@@ -1,4 +1,6 @@
 .header {
+  display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
   padding-bottom: 41px;
   border-bottom: 1px solid #545454B2;
