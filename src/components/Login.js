@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import useForm from "../hooks/form";
 import MainWithForm from "./MainWithForm";
 
-function Register() {
+function Login() {
 
   const {values, setValues, handleChange} = useForm({email: "", password: ""});
 
@@ -20,7 +20,7 @@ function Register() {
   }
 
   return (
-    <MainWithForm name="register" title="Регистрация" btnTitle="Зарегистрироваться" linkTitle="Уже зарегистрированы? Войти" linkPath="/sign-in" onSubmit={handleSubmit}>
+    <MainWithForm name="login" title="Вход" btnTitle="Войти" onSubmit={handleSubmit}>
       <label className="form__field">
         <input className="form__input form__input_style_page form__input_theme_dark" id="email-input" type="text" name="email" placeholder="Email" value={values.email} minLength="2" maxLength="40" onChange={handleChange} required />
         <span className="form__input-error form__input-error_el_name-input"></span>
@@ -33,4 +33,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;

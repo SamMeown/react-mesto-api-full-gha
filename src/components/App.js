@@ -12,6 +12,7 @@ import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import MessagePopup from "./MessagePopup";
 import { Routes, Route } from "react-router-dom";
+import Login from "./Login";
 
 
 function App() {
@@ -166,10 +167,10 @@ function App() {
               </>
             } />
             <Route path="/sign-up" element={
-              <Register name="register" title="Регистрация" btnTitle="Зарегистрироваться" isOpen={false} />
+              <Register />
             } />
             <Route path="/sign-in" element={
-              <Register name="register" title="Регистрация" btnTitle="Зарегистрироваться" isOpen={false} />
+              <Login />
             } />
           </Routes>
         </div>
