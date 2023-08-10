@@ -13,6 +13,7 @@ import AddPlacePopup from "./AddPlacePopup";
 import MessagePopup from "./MessagePopup";
 import { Routes, Route } from "react-router-dom";
 import Login from "./Login";
+import ProtectedRouteElement from "./ProtectedRoute";
 
 
 function App() {
@@ -154,7 +155,7 @@ function App() {
         <div className="page__content">
           <Header loggedIn={loggedIn} />
           <Routes>
-            <Route path="/" element={
+            <Route path="/" element={<ProtectedRouteElement loggedIn={loggedIn} element={
               <>
                 <Main 
                   cards={cards}
@@ -167,7 +168,7 @@ function App() {
                 />
                 <Footer />
               </>
-            } />
+            } />} />
             <Route path="/sign-up" element={
               <Register />
             } />
