@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
 import Main from "./Main";
+import Register from "./Register";
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import api from "../utils/api";
@@ -9,6 +10,8 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
+import MessagePopup from "./MessagePopup";
+import { Routes, Route } from "react-router-dom";
 
 
 function App() {
@@ -147,17 +150,30 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page__content">
           <Header />
-          <Main 
-            cards={cards}
-            onEditProfile={handleEditProfileClick} 
-            onEditAvatar={handleEditAvatarClick} 
-            onAddPlace={handleAddPlaceClick} 
-            onCardClick={handleCardClick} 
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-          />
-          <Footer />
+          <Routes>
+            <Route path="/" element={
+              <>
+                <Main 
+                  cards={cards}
+                  onEditProfile={handleEditProfileClick} 
+                  onEditAvatar={handleEditAvatarClick} 
+                  onAddPlace={handleAddPlaceClick} 
+                  onCardClick={handleCardClick} 
+                  onCardLike={handleCardLike}
+                  onCardDelete={handleCardDelete}
+                />
+                <Footer />
+              </>
+            } />
+            <Route path="/sign-up" element={
+              <Register name="register" title="Регистрация" btnTitle="Зарегистрироваться" isOpen={false} />
+            } />
+            <Route path="/sign-in" element={
+              <Register name="register" title="Регистрация" btnTitle="Зарегистрироваться" isOpen={false} />
+            } />
+          </Routes>
         </div>
+        <MessagePopup title="Вы успешно зарегистрировались!" onClose={closeAllPopups} isOpen={false} />
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
         <EditAvatarPopup onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
         <AddPlacePopup onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} />
