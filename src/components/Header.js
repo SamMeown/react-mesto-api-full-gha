@@ -1,12 +1,17 @@
 import { useContext } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import logo from '../images/logo.svg';
 
 
-function Header({loggedIn}) {
+function Header({loggedIn, onLogout}) {
 
   const currentUser = useContext(CurrentUserContext);
+
+  function handleLogout() {
+    localStorage.removeItem('token');
+    onLogout();
+  }
 
   return (
     <header className="header page__header">
@@ -21,7 +26,10 @@ function Header({loggedIn}) {
           className={({isActive}) => `header__menu-link ${!loggedIn && !isActive ? "header__menu_visible" : ""}`} 
           to="/sign-in"
         >Войти</NavLink>
-        <Link className={`header__menu-link ${loggedIn ? "header__menu_visible" : ""}`} to="#">Выйти</Link>
+        <button 
+          className={`header__menu-button ${loggedIn ? "header__menu_visible" : ""}`} 
+          onClick={handleLogout}
+        >Выйти</button>
       </nav>
     </header>
   );

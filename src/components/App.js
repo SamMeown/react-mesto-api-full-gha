@@ -180,6 +180,12 @@ function App() {
     navigate('/');
   }
 
+  function handleLogout() {
+    setLoggedIn(false);
+    setCurrentUserEmail("");
+    navigate('/sign-in');
+  }
+
   function handleCardDelete(card) {
     api.deleteCard(card.id)
       .then(data => {
@@ -196,7 +202,7 @@ function App() {
     <div className="page">
       <CurrentUserContext.Provider value={currentUser && {...currentUser, email: currentUserEmail}}>
         <div className="page__content">
-          <Header loggedIn={loggedIn} />
+          <Header loggedIn={loggedIn} onLogout={handleLogout} />
           <Routes>
             <Route path="/" element={<ProtectedRouteElement loggedIn={loggedIn} element={() => (
               <>
