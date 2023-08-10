@@ -11,9 +11,10 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import MessagePopup from "./MessagePopup";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
+import InfoTooltip from "./InfoTooltip";
 
 
 function App() {
@@ -28,6 +29,10 @@ function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
 
   const [selectedCard, setSelectedCard] = useState(null);
+  
+  const [registrationSuccess, setRegistrationSuccess] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     api.getUserInfo()
@@ -87,6 +92,8 @@ function App() {
     setIsAddPlacePopupOpen(false);
 
     setSelectedCard(null);
+
+    setRegistrationSuccess(null);
   }
 
   function handleUpdateUser(userInfo) {
@@ -137,6 +144,15 @@ function App() {
       });
   }
 
+  function handleRegistrationSuccess() {
+    setRegistrationSuccess(true);
+    navigate('/sign-in');
+  }
+
+  function handleRegistrationFail() {
+    setRegistrationSuccess(false);
+  }
+
   function handleCardDelete(card) {
     api.deleteCard(card.id)
       .then(data => {
@@ -170,14 +186,14 @@ function App() {
               </>
             } />} />
             <Route path="/sign-up" element={
-              <Register />
+              <Register onSuccess={handleRegistrationSuccess} onFail={handleRegistrationFail} />
             } />
             <Route path="/sign-in" element={
               <Login />
             } />
           </Routes>
         </div>
-        <MessagePopup title="Вы успешно зарегистрировались!" onClose={closeAllPopups} isOpen={false} />
+        <InfoTooltip success={registrationSuccess} onClose={closeAllPopups} isOpen={registrationSuccess !== null}/>
         <EditProfilePopup onClose={closeAllPopups} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} />
         <EditAvatarPopup onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} />
         <AddPlacePopup onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} />
