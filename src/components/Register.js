@@ -1,10 +1,14 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import useForm from "../hooks/form";
+import auth from "../utils/auth";
 import MainWithForm from "./MainWithForm";
 
 function Register() {
 
   const {values, setValues, handleChange} = useForm({email: "", password: ""});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     return () => {
@@ -17,6 +21,16 @@ function Register() {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    
+    const {email, password} = values; 
+    auth.register(email, password)
+    .then(res => {
+      console.log(res);
+      navigate('/sign-in')
+    })
+    .catch(err => {
+      console.log(`Ошибка ${err}`);
+    });
   }
 
   return (
