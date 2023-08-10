@@ -1,8 +1,9 @@
 import { useEffect } from "react";
 import useForm from "../hooks/form";
+import auth from "../utils/auth";
 import MainWithForm from "./MainWithForm";
 
-function Login() {
+function Login({onSuccess}) {
 
   const {values, setValues, handleChange} = useForm({email: "", password: ""});
 
@@ -17,6 +18,19 @@ function Login() {
 
   function handleSubmit(evt) {
     evt.preventDefault();
+
+    const {email, password} = values;
+    if (!email || !password) {
+      return;
+    }
+
+    auth.authorize(email, password)
+    .then(data => {
+      onSuccess(email);
+    })
+    .catch(err => {
+      console.log(`Ошибка ${err}`);
+    })
   }
 
   return (

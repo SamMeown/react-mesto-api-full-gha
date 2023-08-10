@@ -20,6 +20,22 @@ class Auth {
       body: JSON.stringify({email, password})
     }).then(Auth._handleResponse);
   }
+
+  authorize(email, password) {
+    return fetch(`${this._url}/signin`, {
+      method: 'POST',
+      headers: this._headers,
+      body: JSON.stringify({email, password})
+    })
+    .then(Auth._handleResponse)
+    .then(data => {
+      console.log(data);
+      if (data.token) {
+        localStorage.setItem('token', data.token);
+        return data;
+      }
+    });
+  }
 }
 
 const auth = new Auth('https://auth.nomoreparties.co', {

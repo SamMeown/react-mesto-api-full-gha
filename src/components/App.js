@@ -10,7 +10,6 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import MessagePopup from "./MessagePopup";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
@@ -23,6 +22,7 @@ function App() {
   const [cards, setCards] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUserEmail, setCurrentUserEmail] = useState("");
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
@@ -153,6 +153,12 @@ function App() {
     setRegistrationSuccess(false);
   }
 
+  function handleLoginSuccess(userEmail) {
+    setLoggedIn(true);
+    setCurrentUserEmail(userEmail);
+    navigate('/');
+  }
+
   function handleCardDelete(card) {
     api.deleteCard(card.id)
       .then(data => {
@@ -167,11 +173,11 @@ function App() {
 
   return (
     <div className="page">
-      <CurrentUserContext.Provider value={currentUser}>
+      <CurrentUserContext.Provider value={currentUser && {...currentUser, email: currentUserEmail}}>
         <div className="page__content">
           <Header loggedIn={loggedIn} />
           <Routes>
-            <Route path="/" element={<ProtectedRouteElement loggedIn={loggedIn} element={
+            <Route path="/" element={<ProtectedRouteElement loggedIn={loggedIn} element={() => (
               <>
                 <Main 
                   cards={cards}
@@ -184,12 +190,12 @@ function App() {
                 />
                 <Footer />
               </>
-            } />} />
+            )} />} />
             <Route path="/sign-up" element={
               <Register onSuccess={handleRegistrationSuccess} onFail={handleRegistrationFail} />
             } />
             <Route path="/sign-in" element={
-              <Login />
+              <Login onSuccess={handleLoginSuccess} />
             } />
           </Routes>
         </div>
