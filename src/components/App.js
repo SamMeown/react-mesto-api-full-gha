@@ -36,6 +36,10 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (!loggedIn) {
+      return;
+    }
+
     api.getUserInfo()
       .then(data => {
         console.log(`Got user data: `, data);
@@ -44,13 +48,13 @@ function App() {
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     if (!loggedIn) {
       return;
     }
-    
+
     api.getCards()
       .then(data => {
         console.log(`Got cards data: `, data);
@@ -59,7 +63,7 @@ function App() {
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-  }, [currentUser, loggedIn]);
+  }, [loggedIn]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
