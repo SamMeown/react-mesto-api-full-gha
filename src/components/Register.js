@@ -1,9 +1,8 @@
 import { useEffect } from "react";
 import useForm from "../hooks/form";
-import auth from "../utils/auth";
 import MainWithForm from "./MainWithForm";
 
-function Register({onSuccess, onFail}) {
+function Register({onRegister}) {
 
   const {values, setValues, handleChange} = useForm({email: "", password: ""});
 
@@ -24,15 +23,7 @@ function Register({onSuccess, onFail}) {
       return;
     }
 
-    auth.register(email, password)
-    .then(res => {
-      console.log(res);
-      onSuccess();
-    })
-    .catch(err => {
-      console.log(`Ошибка ${err}`);
-      onFail();
-    });
+    onRegister(email, password);
   }
 
   return (

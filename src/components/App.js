@@ -167,13 +167,17 @@ function App() {
       });
   }
 
-  function handleRegistrationSuccess() {
-    setRegistrationSuccess(true);
-    navigate('/sign-in');
-  }
-
-  function handleRegistrationFail() {
-    setRegistrationSuccess(false);
+  function handleRegistration(email, password) {
+    auth.register(email, password)
+    .then(res => {
+      console.log(`Registration succeeded: `, res);
+      setRegistrationSuccess(true);
+      navigate('/sign-in');
+    })
+    .catch(err => {
+      console.log(`Ошибка ${err}`);
+      setRegistrationSuccess(false);
+    });
   }
 
   function handleLoginSuccess(userEmail) {
@@ -221,7 +225,7 @@ function App() {
               </>
             )} />} />
             <Route path="/sign-up" element={
-              <Register onSuccess={handleRegistrationSuccess} onFail={handleRegistrationFail} />
+              <Register onRegister={handleRegistration} />
             } />
             <Route path="/sign-in" element={
               <Login onSuccess={handleLoginSuccess} />
