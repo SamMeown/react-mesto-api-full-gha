@@ -180,10 +180,16 @@ function App() {
     });
   }
 
-  function handleLoginSuccess(userEmail) {
-    setLoggedIn(true);
-    setCurrentUserEmail(userEmail);
-    navigate('/');
+  function handleLogin(email, password) {
+    auth.authorize(email, password)
+    .then(data => {
+      setLoggedIn(true);
+      setCurrentUserEmail(email);
+      navigate('/');
+    })
+    .catch(err => {
+      console.log(`Ошибка ${err}`);
+    });
   }
 
   function handleLogout() {
@@ -228,7 +234,7 @@ function App() {
               <Register onRegister={handleRegistration} />
             } />
             <Route path="/sign-in" element={
-              <Login onSuccess={handleLoginSuccess} />
+              <Login onLogin={handleLogin} />
             } />
             <Route path="*" element={
               <Navigate to="/" replace/>
