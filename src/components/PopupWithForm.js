@@ -6,7 +6,7 @@ function PopupWithForm({name, title, btnTitle, onClose, onSubmit, children, isOp
     >
       <div className="popup__container">
         <button className="popup__close-btn btn" type="button" onClick={onClose} aria-label="Закрыть"></button>
-        <form className="form popup__form" name={`${name}-form`} onSubmit={onSubmit} noValidate>
+        <form className="form popup__form" name={`${name}-form`} onSubmit={onSubmit}>
           <h2 className="form__title">{title}</h2>
           <fieldset className="form__fieldset form__fieldset_set_inputs">
             {children}
