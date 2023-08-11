@@ -89,14 +89,8 @@ function App() {
     setCards(data.map(getCardData));
   }
 
-  function getCardData(item) {
-    return {
-      id: item._id,
-      name: item.name,
-      link: item.link,
-      likes: item.likes,
-      owner: item.owner
-    };
+  function getCardData({ _id: id, name, link, likes, owner }) {
+    return { id, name, link, likes, owner };
   }
 
   function handleEditAvatarClick() {
