@@ -47,6 +47,10 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!loggedIn) {
+      return;
+    }
+    
     api.getCards()
       .then(data => {
         console.log(`Got cards data: `, data);
@@ -55,7 +59,7 @@ function App() {
       .catch(err => {
         console.log(`Ошибка ${err}`);
       });
-  }, [currentUser]);
+  }, [currentUser, loggedIn]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
