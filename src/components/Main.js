@@ -12,14 +12,14 @@ function Main({cards, onEditProfile, onEditAvatar, onAddPlace, onCardClick, onCa
     <main className="content">
       <section className="profile page__profile">
         <span className="profile__picture-container" onClick={onEditAvatar}>
-          <img src={(currentUser && currentUser.avatar) ?? avatar_placeholder} alt="Аватар" className="profile__picture" />
+          <img src={currentUser?.avatar ?? avatar_placeholder} alt="Аватар" className="profile__picture" />
         </span>
         <div className="profile__info">
           <div className="profile__name-container">
-            <h1 className="profile__name overflow-ready-string">{currentUser ? currentUser.name : ""}</h1>
+            <h1 className="profile__name overflow-ready-string">{currentUser?.name ?? ""}</h1>
             <button className="btn profile__edit-btn" type="button" onClick={onEditProfile} aria-label="Редактировать профиль"></button>
           </div>
-          <p className="profile__about overflow-ready-string">{currentUser ? currentUser.about : ""}</p>
+          <p className="profile__about overflow-ready-string">{currentUser?.about ?? ""}</p>
         </div>
         <button className="btn profile__add-btn" type="button" onClick={onAddPlace} aria-label="Добавить место"></button>
       </section>
