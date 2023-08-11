@@ -10,7 +10,7 @@ import CurrentUserContext from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, Navigate } from "react-router-dom";
 import Login from "./Login";
 import ProtectedRouteElement from "./ProtectedRoute";
 import InfoTooltip from "./InfoTooltip";
@@ -224,6 +224,9 @@ function App() {
             <Route path="/sign-in" element={
               <Login onSuccess={handleLoginSuccess} />
             } />
+            <Route path="*" element={
+              <Navigate to="/" replace/>
+            }/>
           </Routes>
         </div>
         <InfoTooltip success={registrationSuccess} onClose={closeAllPopups} isOpen={registrationSuccess !== null}/>
