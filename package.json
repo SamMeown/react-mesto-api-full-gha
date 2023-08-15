@@ -1,0 +1,19 @@
+{
+  "name": "express-mesto-gha",
+  "version": "0.0.1",
+  "description": "Backend for Mesto project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SamMeown/express-mesto-gha.git"
+  },
+  "author": "Semyon Krutman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SamMeown/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/SamMeown/express-mesto-gha#readme"
+}
