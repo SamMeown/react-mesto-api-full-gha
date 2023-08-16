@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 
 const usersApi = require('./routes/users');
+const cardsApi = require('./routes/cards');
 
 const { PORT = 3000 } = process.env;
 
@@ -22,6 +23,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/users', usersApi);
+app.use('/cards', cardsApi);
 
 app.listen(PORT, () => {
   console.log('Hi');
