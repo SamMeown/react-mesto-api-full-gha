@@ -21,4 +21,22 @@ router.post('/', (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
+function updateUser(userId, { name, about, avatar }, res) {
+  User.findByIdAndUpdate(userId, { name, about, avatar }, { new: true, runValidators: true })
+    .then((user) => res.send(user))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+}
+
+router.patch('/me', (req, res) => {
+  const userId = req.user;
+  const { name, about } = req.body;
+  updateUser(userId, { name, about }, res);
+});
+
+router.patch('/me/avatar', (req, res) => {
+  const userId = req.user;
+  const { avatar } = req.body;
+  updateUser(userId, { avatar }, res);
+});
+
 module.exports = router;
