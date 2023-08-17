@@ -54,13 +54,13 @@ function updateUser(userId, { name, about, avatar }, res) {
 }
 
 module.exports.updateUserInfo = (req, res) => {
-  const userId = req.user;
+  const { _id: userId } = req.user;
   const { name, about } = req.body;
   updateUser(userId, { name, about }, res);
 };
 
 module.exports.updateUserAvatar = (req, res) => {
-  const userId = req.user;
+  const { _id: userId } = req.user;
   const { avatar } = req.body;
   updateUser(userId, { avatar }, res);
 };
