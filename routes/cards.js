@@ -28,4 +28,28 @@ router.delete('/:cardId', (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
+router.put('/:cardId/likes', (req, res) => {
+  const { cardId } = req.params;
+  const { _id: userId } = req.user;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $addToSet: { likes: userId } },
+    { new: true, runValidators: true },
+  )
+    .then((card) => res.send(card))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+});
+
+router.delete('/:cardId/likes', (req, res) => {
+  const { cardId } = req.params;
+  const { _id: userId } = req.user;
+  Card.findByIdAndUpdate(
+    cardId,
+    { $pull: { likes: userId } },
+    { new: true },
+  )
+    .then((card) => res.send(card))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+});
+
 module.exports = router;
