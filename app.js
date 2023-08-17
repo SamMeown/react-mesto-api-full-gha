@@ -26,5 +26,5 @@ app.use('/users', usersApi);
 app.use('/cards', cardsApi);
 
 app.listen(PORT, () => {
-  console.log('Hi');
+  console.log(`Server started on port ${PORT}...`); // eslint-disable-line no-console
 });
