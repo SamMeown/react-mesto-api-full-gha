@@ -28,28 +28,28 @@ router.delete('/:cardId', (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
-router.put('/:cardId/likes', (req, res) => {
-  const { cardId } = req.params;
-  const { _id: userId } = req.user;
+function updateLike(cardId, userId, like, res) {
+  const query = {};
+  query[like ? '$addToSet' : '$pull'] = { likes: userId };
   Card.findByIdAndUpdate(
     cardId,
-    { $addToSet: { likes: userId } },
+    query,
     { new: true, runValidators: true },
   )
     .then((card) => res.send(card))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+}
+
+router.put('/:cardId/likes', (req, res) => {
+  const { cardId } = req.params;
+  const { _id: userId } = req.user;
+  updateLike(cardId, userId, true, res);
 });
 
 router.delete('/:cardId/likes', (req, res) => {
   const { cardId } = req.params;
   const { _id: userId } = req.user;
-  Card.findByIdAndUpdate(
-    cardId,
-    { $pull: { likes: userId } },
-    { new: true },
-  )
-    .then((card) => res.send(card))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+  updateLike(cardId, userId, false, res);
 });
 
 module.exports = router;
