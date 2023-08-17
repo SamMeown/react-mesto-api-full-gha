@@ -29,4 +29,11 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
+cardSchema.set('toObject', {
+  transform: (doc, ret) => {
+    delete ret.__v; // eslint-disable-line no-param-reassign
+    return ret;
+  },
+});
+
 module.exports = mongoose.model('card', cardSchema);

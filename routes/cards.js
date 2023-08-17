@@ -3,7 +3,7 @@ const Card = require('../models/card');
 
 router.get('/', (req, res) => {
   Card.find({})
-    .then((cards) => res.send(cards))
+    .then((cards) => res.send(cards.map((card) => card.toObject())))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
   const { name, link } = req.body;
   const owner = req.user;
   Card.create({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => res.send(card.toObject()))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
@@ -23,7 +23,7 @@ router.delete('/:cardId', (req, res) => {
         res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
-      res.send(card);
+      res.send(card.toObject());
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
@@ -36,7 +36,7 @@ function updateLike(cardId, userId, like, res) {
     query,
     { new: true, runValidators: true },
   )
-    .then((card) => res.send(card))
+    .then((card) => res.send(card.toObject()))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 }
 
