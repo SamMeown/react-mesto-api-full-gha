@@ -25,6 +25,8 @@ app.use((req, res, next) => {
 app.use('/users', usersApi);
 app.use('/cards', cardsApi);
 
+app.use((req, res) => res.status(404).send({ message: 'Неправильный путь' }));
+
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}...`); // eslint-disable-line no-console
 });
