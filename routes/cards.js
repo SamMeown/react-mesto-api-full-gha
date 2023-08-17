@@ -2,7 +2,7 @@ const router = require('express').Router();
 const Card = require('../models/card');
 
 router.get('/', (req, res) => {
-  Card.find({})
+  Card.find({}).populate(['owner', 'likes'])
     .then((cards) => res.send(cards.map((card) => card.toObject())))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
@@ -11,6 +11,7 @@ router.post('/', (req, res) => {
   const { name, link } = req.body;
   const owner = req.user;
   Card.create({ name, link, owner })
+    .then((card) => card.populate('owner'))
     .then((card) => res.send(card.toObject()))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
@@ -23,7 +24,7 @@ router.delete('/:cardId', (req, res) => {
         res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
         return;
       }
-      res.send(card.toObject());
+      res.send({ message: 'Карточка удалена' });
     })
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
@@ -35,7 +36,7 @@ function updateLike(cardId, userId, like, res) {
     cardId,
     query,
     { new: true, runValidators: true },
-  )
+  ).populate(['owner', 'likes'])
     .then((card) => res.send(card.toObject()))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 }
