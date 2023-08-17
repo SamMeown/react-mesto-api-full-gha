@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const mongoose = require('mongoose');
 const Card = require('../models/card');
 
 router.get('/', (req, res) => {
@@ -13,7 +14,13 @@ router.post('/', (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => card.populate('owner'))
     .then((card) => res.send(card.toObject()))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({ message: 'Некорректные данные' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 });
 
 router.delete('/:cardId', (req, res) => {
@@ -21,7 +28,7 @@ router.delete('/:cardId', (req, res) => {
   Card.findByIdAndDelete(cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Запрашиваемая карточка не найдена' });
+        res.status(404).send({ message: 'Карточка не найдена' });
         return;
       }
       res.send({ message: 'Карточка удалена' });
@@ -37,8 +44,20 @@ function updateLike(cardId, userId, like, res) {
     query,
     { new: true, runValidators: true },
   ).populate(['owner', 'likes'])
-    .then((card) => res.send(card.toObject()))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Карточка не найдена' });
+        return;
+      }
+      res.send(card.toObject());
+    })
+    .catch((err) => {
+      if (err instanceof mongoose.Error.ValidationError) {
+        res.status(400).send({ message: 'Некорректные данные' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 }
 
 router.put('/:cardId/likes', (req, res) => {
