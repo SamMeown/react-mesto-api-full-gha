@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const helmet = require('helmet');
 
 const usersApi = require('./routes/users');
 const cardsApi = require('./routes/cards');
@@ -13,6 +14,7 @@ mongoose.connect(DB_URL, {
   useNewUrlParser: true,
 });
 
+app.use(helmet());
 app.use(bodyParser.json());
 app.use((req, res, next) => {
   req.user = {
