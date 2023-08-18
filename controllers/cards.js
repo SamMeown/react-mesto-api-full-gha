@@ -24,15 +24,15 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCard = (req, res) => {
   const { cardId } = req.params;
-  Card.findByIdAndDelete(cardId)
-    .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Карточка не найдена' });
-        return;
-      }
+  Card.findByIdAndDelete(cardId).orFail()
+    .then(() => {
       res.send({ message: 'Карточка удалена' });
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        res.status(404).send({ message: 'Карточка не найдена' });
+        return;
+      }
       if (err instanceof mongoose.Error.CastError) {
         res.status(400).send({ message: 'Некорректные данные' });
         return;
@@ -48,15 +48,15 @@ function updateLike(cardId, userId, like, res) {
     cardId,
     query,
     { new: true, runValidators: true },
-  ).populate(['owner', 'likes'])
+  ).populate(['owner', 'likes']).orFail()
     .then((card) => {
-      if (!card) {
-        res.status(404).send({ message: 'Карточка не найдена' });
-        return;
-      }
       res.send(card.toObject());
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        res.status(404).send({ message: 'Карточка не найдена' });
+        return;
+      }
       if (err instanceof mongoose.Error.CastError) {
         res.status(400).send({ message: 'Некорректные данные' });
         return;

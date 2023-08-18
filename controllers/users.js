@@ -9,16 +9,15 @@ module.exports.getUsers = (req, res) => {
 
 module.exports.getUser = (req, res) => {
   const { id } = req.params;
-  User.findById(id)
+  User.findById(id).orFail()
     .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-
       res.send(user.toObject());
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        res.status(404).send({ message: 'Пользователь не найден' });
+        return;
+      }
       if (err instanceof mongoose.Error.CastError) {
         res.status(400).send({ message: 'Некорректные данные' });
         return;
@@ -41,16 +40,19 @@ module.exports.createUser = (req, res) => {
 };
 
 function updateUser(userId, { name, about, avatar }, res) {
-  User.findByIdAndUpdate(userId, { name, about, avatar }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    userId,
+    { name, about, avatar },
+    { new: true, runValidators: true },
+  ).orFail()
     .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Пользователь не найден' });
-        return;
-      }
-
       res.send(user.toObject());
     })
     .catch((err) => {
+      if (err instanceof mongoose.Error.DocumentNotFoundError) {
+        res.status(404).send({ message: 'Пользователь не найден' });
+        return;
+      }
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(400).send({ message: 'Некорректные данные' });
         return;
