@@ -15,7 +15,7 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(201).send(card.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });
@@ -34,7 +34,7 @@ module.exports.deleteCard = (req, res) => {
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });
@@ -58,7 +58,7 @@ function updateLike(cardId, userId, like, res) {
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });

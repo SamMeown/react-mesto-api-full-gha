@@ -1,21 +1,22 @@
 const mongoose = require('mongoose');
+const validationMessages = require('../errors/validation');
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    minlength: 2,
-    maxlength: 30,
-    required: true,
+    minlength: [2, validationMessages.minlengthMsg(2)],
+    maxlength: [30, validationMessages.maxlengthMsg(30)],
+    required: [true, validationMessages.requiredMsg()],
   },
   about: {
     type: String,
-    minlength: 2,
-    maxlength: 30,
-    required: true,
+    minlength: [2, validationMessages.minlengthMsg(2)],
+    maxlength: [30, validationMessages.maxlengthMsg(30)],
+    required: [true, validationMessages.requiredMsg()],
   },
   avatar: {
     type: String,
-    required: true,
+    required: [true, validationMessages.requiredMsg()],
   },
 });
 

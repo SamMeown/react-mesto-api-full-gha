@@ -19,7 +19,7 @@ module.exports.getUser = (req, res) => {
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });
@@ -32,7 +32,7 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(user.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });
@@ -54,7 +54,7 @@ function updateUser(userId, { name, about, avatar }, res) {
         return;
       }
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: 'Некорректные данные' });
+        res.status(400).send({ message: err.message });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка' });
