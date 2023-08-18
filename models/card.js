@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 const validationMessages = require('../errors/validation');
 
 const cardSchema = new mongoose.Schema({
@@ -11,6 +12,10 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: [true, validationMessages.requiredMsg()],
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: validationMessages.invalidUrlMsg(),
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,

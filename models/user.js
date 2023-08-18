@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 const validationMessages = require('../errors/validation');
 
 const userSchema = new mongoose.Schema({
@@ -17,6 +18,10 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     required: [true, validationMessages.requiredMsg()],
+    validate: {
+      validator: (v) => validator.isURL(v),
+      message: validationMessages.invalidUrlMsg(),
+    },
   },
 });
 

@@ -4,4 +4,6 @@ module.exports = {
   maxlengthMsg: (length) => `максимальная длина поля - ${length}`,
 
   requiredMsg: () => 'поле обязательно',
+
+  invalidUrlMsg: () => 'некорректный URL',
 };
