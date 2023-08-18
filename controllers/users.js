@@ -30,7 +30,7 @@ module.exports.getUser = (req, res) => {
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
-    .then((user) => res.send(user.toObject()))
+    .then((user) => res.status(201).send(user.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(400).send({ message: 'Некорректные данные' });

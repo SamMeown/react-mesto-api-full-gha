@@ -12,7 +12,7 @@ module.exports.createCard = (req, res) => {
   const { _id: owner } = req.user;
   Card.create({ name, link, owner })
     .then((card) => card.populate('owner'))
-    .then((card) => res.send(card.toObject()))
+    .then((card) => res.status(201).send(card.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
         res.status(400).send({ message: 'Некорректные данные' });
