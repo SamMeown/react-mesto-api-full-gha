@@ -23,6 +23,21 @@ const userSchema = new mongoose.Schema({
       message: validationMessages.invalidUrlMsg(),
     },
   },
+  email: {
+    type: String,
+    required: [true, validationMessages.requiredMsg()],
+    unique: [true, validationMessages.uniqueMsg()],
+    validate: {
+      validator: (v) => validator.isEmail(v),
+      message: validationMessages.invalidEmailMsg(),
+    },
+  },
+  password: {
+    type: String,
+    required: [true, validationMessages.requiredMsg()],
+    minlength: [4, validationMessages.minlengthMsg(4)],
+    maxlength: [32, validationMessages.maxlengthMsg(32)],
+  },
 });
 
 userSchema.set('toObject', {

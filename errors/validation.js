@@ -5,5 +5,9 @@ module.exports = {
 
   requiredMsg: () => 'поле обязательно',
 
+  uniqueMsg: () => 'значение должно быть уникальным',
+
   invalidUrlMsg: () => 'некорректный URL',
+
+  invalidEmailMsg: () => 'невалидный email',
 };

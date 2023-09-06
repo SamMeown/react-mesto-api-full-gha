@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { MongoServerError } = require('mongodb'); // eslint-disable-line import/no-extraneous-dependencies
 const User = require('../models/user');
 
 module.exports.getUsers = (req, res) => {
@@ -27,11 +28,16 @@ module.exports.getUser = (req, res) => {
 };
 
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  User.create({ name, about, avatar })
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
+  User.create({
+    name, about, avatar, email, password,
+  })
     .then((user) => res.status(201).send(user.toObject()))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError) {
+      if (err instanceof mongoose.Error.ValidationError
+          || (err instanceof MongoServerError && err.code === 11000)) {
         res.status(400).send({ message: err.message });
         return;
       }
