@@ -7,21 +7,21 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [2, validationMessages.minlengthMsg(2)],
     maxlength: [30, validationMessages.maxlengthMsg(30)],
-    required: [true, validationMessages.requiredMsg()],
+    default: 'Жак-Ив Кусто',
   },
   about: {
     type: String,
     minlength: [2, validationMessages.minlengthMsg(2)],
     maxlength: [30, validationMessages.maxlengthMsg(30)],
-    required: [true, validationMessages.requiredMsg()],
+    default: 'Исследователь',
   },
   avatar: {
     type: String,
-    required: [true, validationMessages.requiredMsg()],
     validate: {
       validator: (v) => validator.isURL(v),
       message: validationMessages.invalidUrlMsg(),
     },
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
     type: String,
