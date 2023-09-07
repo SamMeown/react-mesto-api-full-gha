@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, validationMessages.requiredMsg()],
     minlength: [4, validationMessages.minlengthMsg(4)],
-    maxlength: [32, validationMessages.maxlengthMsg(32)],
+    maxlength: [256, validationMessages.maxlengthMsg(32)],
   },
 });
 

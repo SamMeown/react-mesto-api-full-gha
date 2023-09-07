@@ -1,3 +1,4 @@
+const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const { MongoServerError } = require('mongodb'); // eslint-disable-line import/no-extraneous-dependencies
 const User = require('../models/user');
@@ -31,9 +32,14 @@ module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  User.create({
-    name, about, avatar, email, password,
-  })
+  bcrypt.hash(password, 10)
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => res.status(201).send(user.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError
