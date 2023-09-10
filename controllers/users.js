@@ -10,9 +10,8 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-module.exports.getUser = (req, res) => {
-  const { id } = req.params;
-  User.findById(id).orFail()
+function getUser(userId, res) {
+  User.findById(userId).orFail()
     .then((user) => {
       res.send(user.toObject());
     })
@@ -27,6 +26,16 @@ module.exports.getUser = (req, res) => {
       }
       res.status(500).send({ message: 'Произошла ошибка' });
     });
+}
+
+module.exports.getUser = (req, res) => {
+  const { id } = req.params;
+  getUser(id, res);
+};
+
+module.exports.getCurrentUser = (req, res) => {
+  const { _id: userId } = req.user;
+  getUser(userId, res);
 };
 
 module.exports.login = (req, res) => {
