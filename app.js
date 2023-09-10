@@ -5,6 +5,8 @@ const helmet = require('helmet');
 
 const usersApi = require('./routes/users');
 const cardsApi = require('./routes/cards');
+const { createUser, login } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -16,13 +18,11 @@ mongoose.connect(DB_URL, {
 
 app.use(helmet());
 app.use(bodyParser.json());
-app.use((req, res, next) => {
-  req.user = {
-    _id: '64dbd61793f3c5f5a97f9c5b',
-  };
 
-  next();
-});
+app.post('/signup', createUser);
+app.post('/signin', login);
+
+app.use(auth);
 
 app.use('/users', usersApi);
 app.use('/cards', cardsApi);
