@@ -38,6 +38,7 @@ const userSchema = new mongoose.Schema({
     required: [true, validationMessages.requiredMsg()],
     minlength: [4, validationMessages.minlengthMsg(4)],
     maxlength: [256, validationMessages.maxlengthMsg(32)],
+    select: false,
   },
 });
 
@@ -54,7 +55,7 @@ function loginFailedReject() {
 
 // eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email })
+  return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
         return loginFailedReject();
