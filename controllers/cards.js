@@ -23,8 +23,9 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCard = (req, res) => {
+  const { _id: userId } = req.user;
   const { cardId } = req.params;
-  Card.findByIdAndDelete(cardId).orFail()
+  Card.findOneAndDelete({ _id: cardId, owner: userId }).orFail()
     .then(() => {
       res.send({ message: 'Карточка удалена' });
     })
