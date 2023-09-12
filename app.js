@@ -2,10 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
+const { errors: validationErrors } = require('celebrate');
 
 const usersApi = require('./routes/users');
 const cardsApi = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
+const { validateCreateUser, validateLogin } = require('./validators/user');
 const auth = require('./middlewares/auth');
 const errors = require('./middlewares/errors');
 
@@ -20,8 +22,8 @@ mongoose.connect(DB_URL, {
 app.use(helmet());
 app.use(bodyParser.json());
 
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', validateCreateUser, createUser);
+app.post('/signin', validateLogin, login);
 
 app.use(auth);
 
@@ -30,6 +32,7 @@ app.use('/cards', cardsApi);
 
 app.use((req, res) => res.status(404).send({ message: 'Неправильный путь' }));
 
+app.use(validationErrors());
 app.use(errors);
 
 app.listen(PORT, () => {
