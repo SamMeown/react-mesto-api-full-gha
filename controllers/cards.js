@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 const Card = require('../models/card');
+const httpErrors = require('../errors/http');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({}).populate(['owner', 'likes'])
     .then((cards) => res.send(cards.map((card) => card.toObject())))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const { _id: owner } = req.user;
   Card.create({ name, link, owner })
@@ -15,14 +16,14 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.status(201).send(card.toObject()))
     .catch((err) => {
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: err.message });
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      next(err);
     });
 };
 
-module.exports.deleteCard = (req, res) => {
+module.exports.deleteCard = (req, res, next) => {
   const { _id: userId } = req.user;
   const { cardId } = req.params;
   Card.findOneAndDelete({ _id: cardId, owner: userId }).orFail()
@@ -31,18 +32,18 @@ module.exports.deleteCard = (req, res) => {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        next(new httpErrors.NotFoundError('Карточка не найдена'));
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: err.message });
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      next(err);
     });
 };
 
-function updateLike(cardId, userId, like, res) {
+function updateLike(cardId, userId, like, res, next) {
   const query = {};
   query[like ? '$addToSet' : '$pull'] = { likes: userId };
   Card.findByIdAndUpdate(
@@ -55,25 +56,25 @@ function updateLike(cardId, userId, like, res) {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        res.status(404).send({ message: 'Карточка не найдена' });
+        next(new httpErrors.NotFoundError('Карточка не найдена'));
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: err.message });
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      next(err);
     });
 }
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   const { cardId } = req.params;
   const { _id: userId } = req.user;
-  updateLike(cardId, userId, true, res);
+  updateLike(cardId, userId, true, res, next);
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   const { _id: userId } = req.user;
-  updateLike(cardId, userId, false, res);
+  updateLike(cardId, userId, false, res, next);
 };
