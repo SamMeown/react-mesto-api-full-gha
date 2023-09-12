@@ -7,6 +7,7 @@ const usersApi = require('./routes/users');
 const cardsApi = require('./routes/cards');
 const { createUser, login } = require('./controllers/users');
 const auth = require('./middlewares/auth');
+const errors = require('./middlewares/errors');
 
 const { PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 
@@ -28,6 +29,8 @@ app.use('/users', usersApi);
 app.use('/cards', cardsApi);
 
 app.use((req, res) => res.status(404).send({ message: 'Неправильный путь' }));
+
+app.use(errors);
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}...`); // eslint-disable-line no-console

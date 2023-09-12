@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const validationMessages = require('../errors/validation');
+const authErrors = require('../errors/auth');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -50,7 +51,7 @@ userSchema.set('toObject', {
 });
 
 function loginFailedReject() {
-  return Promise.reject(new Error('Неправильные почта или пароль'));
+  return Promise.reject(new authErrors.CredentialsNotValidError());
 }
 
 // eslint-disable-next-line func-names

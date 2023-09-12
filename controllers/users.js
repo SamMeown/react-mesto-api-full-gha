@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const { MongoServerError } = require('mongodb'); // eslint-disable-line import/no-extraneous-dependencies
 const User = require('../models/user');
+const httpErrors = require('../errors/http');
+const authErrors = require('../errors/auth');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
@@ -10,35 +12,36 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
-function getUser(userId, res) {
+function getUser(userId, res, next) {
   User.findById(userId).orFail()
     .then((user) => {
       res.send(user.toObject());
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        next(new httpErrors.NotFoundError('Пользователь не найден'));
         return;
       }
       if (err instanceof mongoose.Error.CastError) {
-        res.status(400).send({ message: err.message });
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+
+      next(err);
     });
 }
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   const { id } = req.params;
-  getUser(id, res);
+  getUser(id, res, next);
 };
 
-module.exports.getCurrentUser = (req, res) => {
+module.exports.getCurrentUser = (req, res, next) => {
   const { _id: userId } = req.user;
-  getUser(userId, res);
+  getUser(userId, res, next);
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -47,11 +50,14 @@ module.exports.login = (req, res) => {
       res.send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      if (err instanceof authErrors.CredentialsNotValidError) {
+        next(new httpErrors.UnauthorizedError(err.message));
+      }
+      next(err);
     });
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -65,16 +71,19 @@ module.exports.createUser = (req, res) => {
     }))
     .then((user) => res.status(201).send(user.toObject()))
     .catch((err) => {
-      if (err instanceof mongoose.Error.ValidationError
-          || (err instanceof MongoServerError && err.code === 11000)) {
-        res.status(400).send({ message: err.message });
+      if (err instanceof mongoose.Error.ValidationError) {
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      if (err instanceof MongoServerError && err.code === 11000) {
+        next(new httpErrors.ConflictError(err.message));
+        return;
+      }
+      next(err);
     });
 };
 
-function updateUser(userId, { name, about, avatar }, res) {
+function updateUser(userId, { name, about, avatar }, res, next) {
   User.findByIdAndUpdate(
     userId,
     { name, about, avatar },
@@ -85,25 +94,25 @@ function updateUser(userId, { name, about, avatar }, res) {
     })
     .catch((err) => {
       if (err instanceof mongoose.Error.DocumentNotFoundError) {
-        res.status(404).send({ message: 'Пользователь не найден' });
+        next(new httpErrors.NotFoundError('Пользователь не найден'));
         return;
       }
       if (err instanceof mongoose.Error.ValidationError) {
-        res.status(400).send({ message: err.message });
+        next(new httpErrors.BadRequestError(err.message));
         return;
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      next(err);
     });
 }
 
-module.exports.updateUserInfo = (req, res) => {
+module.exports.updateUserInfo = (req, res, next) => {
   const { _id: userId } = req.user;
   const { name, about } = req.body;
-  updateUser(userId, { name, about }, res);
+  updateUser(userId, { name, about }, res, next);
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { _id: userId } = req.user;
   const { avatar } = req.body;
-  updateUser(userId, { avatar }, res);
+  updateUser(userId, { avatar }, res, next);
 };
