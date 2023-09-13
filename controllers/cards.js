@@ -26,7 +26,14 @@ module.exports.createCard = (req, res, next) => {
 module.exports.deleteCard = (req, res, next) => {
   const { _id: userId } = req.user;
   const { cardId } = req.params;
-  Card.findOneAndDelete({ _id: cardId, owner: userId }).orFail()
+  Card.findById(cardId).orFail()
+    .then((card) => {
+      if (card.owner.toString() !== userId) {
+        throw new httpErrors.ForbiddenError('Карточка не принадлежит пользователю');
+      }
+
+      return Card.findOneAndDelete({ _id: cardId, owner: userId }).orFail();
+    })
     .then(() => {
       res.send({ message: 'Карточка удалена' });
     })
