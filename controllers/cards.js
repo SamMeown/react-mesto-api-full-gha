@@ -32,7 +32,7 @@ module.exports.deleteCard = (req, res, next) => {
         throw new httpErrors.ForbiddenError('Карточка не принадлежит пользователю');
       }
 
-      return Card.findOneAndDelete({ _id: cardId, owner: userId }).orFail();
+      return Card.deleteOne({ _id: cardId, owner: userId }).orFail();
     })
     .then(() => {
       res.send({ message: 'Карточка удалена' });
