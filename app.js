@@ -10,6 +10,7 @@ const { createUser, login } = require('./controllers/users');
 const { validateCreateUser, validateLogin } = require('./validators/user');
 const auth = require('./middlewares/auth');
 const errors = require('./middlewares/errors');
+const httpErrors = require('./errors/http');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
 
@@ -30,7 +31,7 @@ app.use(auth);
 app.use('/users', usersApi);
 app.use('/cards', cardsApi);
 
-app.use((req, res) => res.status(404).send({ message: 'Неправильный путь' }));
+app.use((req, res, next) => next(new httpErrors.NotFoundError('Неправильный путь')));
 
 app.use(validationErrors());
 app.use(errors);
