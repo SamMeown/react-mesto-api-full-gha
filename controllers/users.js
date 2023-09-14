@@ -6,10 +6,10 @@ const User = require('../models/user');
 const httpErrors = require('../errors/http');
 const authErrors = require('../errors/auth');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send(users.map((user) => user.toObject())))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(next);
 };
 
 function getUser(userId, res, next) {
@@ -52,6 +52,7 @@ module.exports.login = (req, res, next) => {
     .catch((err) => {
       if (err instanceof authErrors.CredentialsNotValidError) {
         next(new httpErrors.UnauthorizedError(err.message));
+        return;
       }
       next(err);
     });
