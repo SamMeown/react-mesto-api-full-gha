@@ -1,0 +1,8 @@
+.places__item {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}

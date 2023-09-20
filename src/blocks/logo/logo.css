@@ -1,0 +1,11 @@
+.logo {
+  width: 142px;
+  vertical-align: bottom;
+}
+
+@media screen and (max-width: 767px) {
+  .logo {
+    margin-left: 27px;
+    width: 104px;
+  }
+}
