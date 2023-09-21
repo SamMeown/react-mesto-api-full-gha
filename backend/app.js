@@ -11,6 +11,7 @@ const { validateCreateUser, validateLogin } = require('./validators/user');
 const auth = require('./middlewares/auth');
 const errors = require('./middlewares/errors');
 const httpErrors = require('./errors/http');
+const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, DB_URL = 'mongodb://127.0.0.1:27017/mestodb' } = process.env;
@@ -25,6 +26,8 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 app.use(requestLogger);
+
+app.use(cors);
 
 app.post('/signup', validateCreateUser, createUser);
 app.post('/signin', validateLogin, login);
