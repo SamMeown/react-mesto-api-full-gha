@@ -1,7 +1,7 @@
 class Api {
   constructor(baseUrl, { headers }) {
     this._url = baseUrl;
-    this._headers = headers;
+    this._base_headers = headers;
   }
 
   static _handleResponse(res) {
@@ -12,16 +12,28 @@ class Api {
     return Promise.reject(res.status);
   }
 
+  _headers() {
+    const headers = {
+      ...this._base_headers
+    };
+    const token = localStorage.getItem('token');
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`
+    }
+
+    return headers;
+  }
+
   getCards() {
     return fetch(`${this._url}/cards`, {
-      headers: this._headers
+      headers: this._headers()
     }).then(Api._handleResponse);
   }
 
   createCard(data) {
     return fetch(`${this._url}/cards`, {
       method: 'POST',
-      headers: this._headers,
+      headers: this._headers(),
       body: JSON.stringify(data)
     }).then(Api._handleResponse);
   }
@@ -29,21 +41,21 @@ class Api {
   deleteCard(cardId) {
     return fetch(`${this._url}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: this._headers()
     }).then(Api._handleResponse);
   }
 
   addLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'PUT',
-      headers: this._headers
+      headers: this._headers()
     }).then(Api._handleResponse);
   }
 
   deleteLike(cardId) {
     return fetch(`${this._url}/cards/${cardId}/likes`, {
       method: 'DELETE',
-      headers: this._headers
+      headers: this._headers()
     }).then(Api._handleResponse);
   }
 
@@ -53,14 +65,14 @@ class Api {
 
   getUserInfo() {
     return fetch(`${this._url}/users/me`, {
-      headers: this._headers
+      headers: this._headers()
     }).then(Api._handleResponse);
   }
 
   updateUserInfo(info) {
     return fetch(`${this._url}/users/me`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: this._headers(),
       body: JSON.stringify(info)
     }).then(Api._handleResponse);
   }
@@ -68,15 +80,14 @@ class Api {
   updateUserAvatar(info) {
     return fetch(`${this._url}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this._headers,
+      headers: this._headers(),
       body: JSON.stringify(info)
     }).then(Api._handleResponse);
   }
 }
 
-const api = new Api('https://mesto.nomoreparties.co/v1/cohort-42', {
+const api = new Api('http://127.0.0.1:3001', {
   headers: {
-    authorization: '6d35ec1d-6d86-4d5b-9eab-6ccf0735e2e6',
     'Content-Type': 'application/json'
   }
 });

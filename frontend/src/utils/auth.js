@@ -49,7 +49,7 @@ class Auth {
   }
 }
 
-const auth = new Auth('https://auth.nomoreparties.co', {
+const auth = new Auth('http://127.0.0.1:3001', {
   headers: {
     'Content-Type': 'application/json'
   }

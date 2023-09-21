@@ -57,8 +57,9 @@ function App() {
 
     api.getCards()
       .then(data => {
-        console.log(`Got cards data: `, data);
-        setCardsInfo(data);
+        const reversedData = data.slice(0).reverse();
+        console.log(`Got cards data: `, reversedData);
+        setCardsInfo(reversedData);
       })
       .catch(err => {
         console.log(`Ошибка ${err}`);
@@ -71,12 +72,12 @@ function App() {
       auth.getUserInfo(token)
       .then(info => {
         console.log(`Got user data (auth): `, info);
-        if (!info.data || !info.data.email) {
+        if (!info.email) {
           return;
         }
 
         setLoggedIn(true);
-        setCurrentUserEmail(info.data.email);
+        setCurrentUserEmail(info.email);
         navigate('/');
       })
       .catch(err => {
