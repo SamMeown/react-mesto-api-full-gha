@@ -7,7 +7,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 158.160.15.22
+IP 158.160.15.22
 
 Frontend https://sammys.nomoredomainsrocks.ru
 
