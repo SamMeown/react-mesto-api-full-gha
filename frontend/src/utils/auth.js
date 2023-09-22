@@ -49,7 +49,7 @@ class Auth {
   }
 }
 
-const auth = new Auth('http://api.sammys.nomoredomainsrocks.ru', {
+const auth = new Auth('https://api.sammys.nomoredomainsrocks.ru', {
   headers: {
     'Content-Type': 'application/json'
   }
