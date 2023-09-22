@@ -86,7 +86,7 @@ class Api {
   }
 }
 
-const api = new Api('http://127.0.0.1:3001', {
+const api = new Api('http://api.sammys.nomoredomainsrocks.ru', {
   headers: {
     'Content-Type': 'application/json'
   }

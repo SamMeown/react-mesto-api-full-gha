@@ -1,5 +1,7 @@
 const allowedCors = [
   'http://127.0.0.1:3000',
+  'http://sammys.nomoredomainsrocks.ru',
+  'https://sammys.nomoredomainsrocks.ru',
 ];
 
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PUT,PATCH,POST,DELETE';
