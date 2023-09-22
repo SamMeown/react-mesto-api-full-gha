@@ -41,12 +41,15 @@ module.exports.getCurrentUser = (req, res, next) => {
   getUser(userId, res, next);
 };
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+const secretKey = NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret-key';
+
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
       const { _id } = user;
-      const token = jwt.sign({ _id }, 'dev-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id }, secretKey, { expiresIn: '7d' });
       res.send({ token });
     })
     .catch((err) => {
